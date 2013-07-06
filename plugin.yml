@@ -1,0 +1,7 @@
+name: DatRPG
+main: com.lamtrung.datrpg.DatRPG
+author: lam@lamtrung.com
+website: http://lamtrung.com
+version: 1.0.5
+
+commands:
