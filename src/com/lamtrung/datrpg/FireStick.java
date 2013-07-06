@@ -16,7 +16,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -125,37 +124,37 @@ public class FireStick implements Listener{
 	}
 	
 	@EventHandler
-	public void onCraft(CraftItemEvent event) {
-
-		if (event.getView().getTopInventory().getItem(0).getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "Wand of Flames")) {
-			BookMeta bookmeta = (BookMeta) event.getView().getTopInventory().getItem(1).getItemMeta();
-			if (bookmeta.getTitle().equalsIgnoreCase("Ardescat")) {
-				if (event.getCurrentItem().hasItemMeta()) {
-					if (event.getCurrentItem().getItemMeta().getLore().contains("Fire") && ((Player) event.getWhoClicked()).getLevel() >= 10) {
-						ItemStack item = event.getCurrentItem();
-						ItemMeta im = item.getItemMeta();
-						List<String> lore = im.getLore();
-						
-						lore.add("1000");
-						im.setLore(lore);
-						item.setItemMeta(im);
-						event.setCurrentItem(item);
-						((Player) event.getWhoClicked()).setLevel(((Player) event.getWhoClicked()).getLevel() - 10);
-
-						return;
-					}
-					
-				}
-			}
-			event.setCancelled(true);
-		}
-	}
-	
-	@EventHandler
 	public void inventClick(InventoryClickEvent event) {
 		if (event.getInventory() instanceof CraftingInventory) {
-			if (event.getSlot() == 0 && event.isShiftClick() && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "Wand of Flames")) 
-				event.setCancelled(true);
+			if (event.getSlot() == 0) {
+				if (event.getCurrentItem().hasItemMeta()) {
+					if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "Wand of Flames")) {
+						BookMeta bookmeta = (BookMeta) event.getView().getTopInventory().getItem(1).getItemMeta();
+						if (bookmeta.getTitle().equalsIgnoreCase("Ardescat")) {
+							if (event.getCurrentItem().hasItemMeta()) {
+								if (event.getCurrentItem().getItemMeta().getLore().contains("Fire") && ((Player) event.getWhoClicked()).getLevel() >= 10) {
+									if (event.isShiftClick()) {
+										event.setCancelled(true);
+										return;
+									}
+									ItemStack item = event.getCurrentItem();
+									ItemMeta im = item.getItemMeta();
+									List<String> lore = im.getLore();
+									
+									lore.add("1000");
+									im.setLore(lore);
+									item.setItemMeta(im);
+									event.setCurrentItem(item);
+									((Player) event.getWhoClicked()).setLevel(((Player) event.getWhoClicked()).getLevel() - 10);
+
+									return;
+								}
+							}
+						}
+						event.setCancelled(true);
+					}
+				}
+			}
 		}
 	}
 
