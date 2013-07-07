@@ -2,7 +2,6 @@ package com.lamtrung.datrpg;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,7 +29,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 public class FireStick implements Listener{
 	
 	public DatRPG rpg;
-	Random rand = new Random();
 	
 	public FireStick (DatRPG plugin){
 		this.rpg = plugin;
@@ -116,15 +114,19 @@ public class FireStick implements Listener{
 	public void livingHit(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof SmallFireball) {
 			if (event.getDamager().hasMetadata("human")) {
-				if (event.getDamager().getMetadata("human").get(0).asBoolean() == true)
-					event.setDamage(event.getDamage()*2.5);
+				if (event.getDamager().getMetadata("human").get(0).asBoolean() == true) {
+					if (event.getEntity() instanceof Player)
+						event.setCancelled(true);
+					else
+						event.setDamage(event.getDamage()*2.5);
+				}
 			}
 		}
 			
 	}
 	
 	@EventHandler
-	public void inventClick(InventoryClickEvent event) {
+	public void onCraft(InventoryClickEvent event) {
 		if (event.getInventory() instanceof CraftingInventory) {
 			if (event.getSlot() == 0) {
 				if (event.getCurrentItem().hasItemMeta()) {
